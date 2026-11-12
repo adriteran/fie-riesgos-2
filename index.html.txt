@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FIE Riesgos | Simulador académico</title>
+<style>
+:root{--p:#64258b;--m:#d4148e;--ink:#282235;--muted:#716a7b;--line:#e8e1ed;--bg:#f7f4fa}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Arial,sans-serif}
+header{background:linear-gradient(120deg,#512078,#8138b8 65%,#d4148e);color:white;padding:25px 16px}
+.wrap{max-width:1000px;margin:auto;padding:0 15px}h1{margin:0;font-size:30px}
+header p{margin:4px 0}.brand{display:flex;align-items:center;gap:12px}.mark{display:grid;place-items:center;border:2px solid #ffffffaa;border-radius:12px;width:42px;height:42px;font-weight:bold}
+main{padding:22px 0}.notice,.card{border-radius:14px;padding:18px;margin-bottom:16px}
+.notice{background:#fff7e5;border:1px solid #efd59b;color:#69490c;font-size:13px}
+.card{background:white;border:1px solid var(--line);box-shadow:0 4px 16px #30204408}
+h2{font-size:19px;color:var(--p);margin:0 0 14px}h3{font-size:15px;margin:8px 0}
+.grid,.five{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.field{display:flex;flex-direction:column;gap:5px}.full{grid-column:1/-1}
+label{font-size:13px;font-weight:bold;color:#50485a}
+input,select,textarea{padding:11px;border:1px solid #d9d1e1;border-radius:9px;font:inherit;width:100%;background:white;color:var(--ink)}
+small,.help{font-size:12px;color:var(--muted)}.criterion{border:1px solid var(--line);border-radius:11px;padding:12px}
+.criterion p{font-size:12px;color:var(--muted);margin:0 0 8px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
+button{border:0;border-radius:9px;padding:12px 17px;font-weight:bold;cursor:pointer}
+.primary{background:var(--p);color:white}.secondary{background:#f0e8f5;color:var(--p)}
+.hidden{display:none}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:15px 0}
+.metric{background:#faf8fc;border:1px solid var(--line);border-radius:10px;padding:12px}
+.metric b{display:block;color:var(--p);font-size:21px}.metric span{font-size:11px;color:var(--muted)}
+.pill{border-radius:30px;padding:7px 12px;font-size:12px;font-weight:bold}
+.low{background:#e4f5ec;color:#146b49}.medium{background:#fff1d8;color:#875000}.high{background:#fde8e8;color:#a21e2d}
+.bar{height:11px;background:#eee8f2;border-radius:20px;overflow:hidden}.bar div{height:100%;background:linear-gradient(90deg,#8138b8,#d4148e)}
+.resulthead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+ul{padding-left:20px}li{margin:5px 0}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:13px}
+td,th{text-align:left;padding:9px;border-bottom:1px solid var(--line)}th{font-size:11px;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:18px}
+@media(max-width:650px){.grid,.five,.twocol{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}}
+@media print{body{background:white}.no-print{display:none!important}.card{box-shadow:none;break-inside:avoid}#results{display:block!important}}
+</style></head>
+<body>
+<header><div class="wrap brand"><div class="mark">F</div><div><h1>FIE Riesgos</h1><p>Simulador académico de evaluación de riesgo crediticio</p></div></div></header>
+<main class="wrap">
+<div class="notice"><b>Importante:</b> prototipo académico independiente. Los puntajes y rangos son criterios didácticos, no políticas ni calificaciones oficiales de Banco FIE o ASFI. No ingreses datos personales reales ni información confidencial.</div>
+<form id="form">
+<section class="card"><h2>1. Datos generales de la operación</h2><div class="grid">
+<div class="field"><label>Nombre o código referencial</label><input id="applicant" placeholder="Ej. Solicitante 001"></div>
+<div class="field"><label>Tipo de crédito</label><select id="product"><option>Microcrédito</option><option>Crédito PYME</option><option>Crédito de consumo</option><option>Crédito productivo</option><option>Crédito de vivienda</option></select></div>
+<div class="field"><label>Monto solicitado (Bs)</label><input id="amount" type="number" min="1" value="25000" required></div>
+<div class="field"><label>Plazo (meses)</label><input id="term" type="number" min="1" value="36" required></div>
+<div class="field"><label>Ingreso mensual neto (Bs)</label><input id="income" type="number" min="0" value="6000" required></div>
+<div class="field"><label>Gastos mensuales (Bs)</label><input id="expenses" type="number" min="0" value="2500" required></div>
+<div class="field"><label>Cuotas de otras deudas al mes (Bs)</label><input id="debts" type="number" min="0" value="500" required></div>
+<div class="field"><label>Cuota mensual estimada del nuevo crédito (Bs)</label><input id="payment" type="number" min="0" value="1000" required><small>Puedes tomarla de FIE Simula.</small></div>
+<div class="field"><label>Actividad económica / ocupación</label><input id="activity" placeholder="Ej. Comercio minorista"></div>
+<div class="field"><label>Antigüedad en actividad o empleo</label><select id="seniority"><option value="0">Menos de 6 meses</option><option value="1">De 6 a 12 meses</option><option value="2" selected>De 1 a 3 años</option><option value="3">Más de 3 años</option></select></div>
+</div></section>
+<section class="card"><h2>2. Evaluación cualitativa: las 5 C del crédito</h2><p class="help">Cada criterio aporta hasta 20 puntos. Selecciona la condición que mejor corresponda según la información disponible.</p><div class="five">
+<div class="criterion"><h3>Carácter</h3><p>Historial de pago, referencias y voluntad de cumplir.</p><select id="character"><option value="20">Favorable: buen historial y referencias</option><option value="13" selected>Intermedio: información limitada o atrasos aislados</option><option value="5">Desfavorable: atrasos frecuentes o incumplimientos</option></select></div>
+<div class="criterion"><h3>Capacidad</h3><p>Ingresos suficientes y estabilidad para pagar.</p><select id="capacity"><option value="20">Favorable: flujo holgado y estable</option><option value="13" selected>Intermedio: margen ajustado</option><option value="5">Desfavorable: flujo insuficiente o inestable</option></select></div>
+<div class="criterion"><h3>Capital</h3><p>Recursos propios, ahorro e inversión.</p><select id="capital"><option value="20">Favorable: aporte propio y respaldo financiero</option><option value="13" selected>Intermedio: aporte limitado</option><option value="5">Desfavorable: escasos recursos propios</option></select></div>
+<div class="criterion"><h3>Colateral</h3><p>Garantías disponibles, suficiencia y respaldo.</p><select id="collateral"><option value="20">Favorable: garantía suficiente y verificable</option><option value="13" selected>Intermedio: garantía parcial o limitada</option><option value="5">Desfavorable: garantía insuficiente</option></select></div>
+<div class="criterion"><h3>Condiciones</h3><p>Destino del crédito y entorno de la actividad.</p><select id="conditions"><option value="20">Favorable: destino claro y entorno estable</option><option value="13" selected>Intermedio: exposición moderada a cambios</option><option value="5">Desfavorable: destino incierto o entorno adverso</option></select></div>
+</div></section>
+<section class="card"><h2>3. Información complementaria</h2><div class="grid">
+<div class="field"><label>Destino del crédito</label><select id="destination"><option>Capital de operaciones</option><option>Capital de inversión</option><option>Consumo personal</option><option>Vivienda</option><option>Otro</option></select></div>
+<div class="field"><label>Tipo de garantía</label><select id="guarantee"><option>Personal</option><option>Prendaria</option><option>Hipotecaria</option><option>DPF</option><option>Sin garantía adicional</option></select></div>
+<div class="field full"><label>Observaciones del evaluador</label><textarea id="notes" rows="3" placeholder="Factores favorables, alertas o documentación pendiente."></textarea></div></div>
+<div class="actions no-print"><button class="primary" type="submit">Evaluar riesgo</button><button class="secondary" type="reset" id="reset">Restablecer</button></div></section>
+</form>
+<section class="card hidden" id="results"><div class="resulthead"><div><h2 style="margin:0">4. Resultado de la evaluación</h2><small id="who"></small></div><span id="classification" class="pill"></span></div>
+<div class="metrics"><div class="metric"><b id="score">—</b><span>Puntaje 5 C / 100</span></div><div class="metric"><b id="ratio">—</b><span>Endeudamiento mensual</span></div><div class="metric"><b id="surplus">—</b><span>Margen mensual (Bs)</span></div><div class="metric"><b id="installmentRatio">—</b><span>Cuota / ingreso</span></div></div>
+<h3>Puntaje cualitativo</h3><div class="bar"><div id="scorebar"></div></div><p id="summary"></p>
+<div class="twocol"><div><h3>Factores favorables</h3><ul id="strengths"></ul></div><div><h3>Alertas identificadas</h3><ul id="alerts"></ul></div></div>
+<h3>Detalle de las 5 C</h3><div class="tablewrap"><table><thead><tr><th>Criterio</th><th>Puntaje</th><th>Máximo</th></tr></thead><tbody id="detail"></tbody></table></div>
+<h3>Recomendación académica</h3><p id="recommendation"></p><small>Clasificación orientativa del prototipo. No equivale a categoría ASFI, calificación regulatoria ni decisión crediticia.</small>
+<div class="actions no-print"><button class="primary" onclick="window.print()">Imprimir / Guardar PDF</button><button class="secondary" id="csv">Descargar evaluación CSV</button></div></section>
+</main><footer>FIE Riesgos · Prototipo académico independiente · No constituye evaluación ni aprobación oficial de Banco FIE.</footer>
+<script>
+const $=id=>document.getElementById(id),fmt=n=>'Bs '+Number(n).toLocaleString('es-BO',{minimumFractionDigits:2,maximumFractionDigits:2});let report={};
+$('form').addEventListener('submit',e=>{
+e.preventDefault();const n=id=>Number($(id).value)||0,inc=n('income'),exp=n('expenses'),deb=n('debts'),pay=n('payment'),free=inc-exp-deb,sur=free-pay,ratio=inc?(deb+pay)/inc*100:0,inst=inc?pay/inc*100:0;
+const cs=[['Carácter',n('character')],['Capacidad',n('capacity')],['Capital',n('capital')],['Colateral',n('collateral')],['Condiciones',n('conditions')]],score=cs.reduce((s,x)=>s+x[1],0);
+let label=score>=70?'Riesgo cualitativo bajo':score>=45?'Riesgo cualitativo medio':'Riesgo cualitativo alto',cl=score>=70?'low':score>=45?'medium':'high',good=[],bad=[];
+if(sur>=0)good.push('El margen estimado alcanza para cubrir la cuota ingresada.');else bad.push('El margen disponible es negativo: los recursos no cubren la cuota estimada.');
+if(ratio<=30)good.push('Las cuotas de deuda representan hasta el 30% del ingreso.');else if(ratio<=50)bad.push('El endeudamiento mensual supera el 30% del ingreso.');else bad.push('El endeudamiento mensual supera el 50% del ingreso.');
+if(n('seniority')>=2)good.push('Antigüedad declarada de al menos un año.');else bad.push('Antigüedad declarada menor a un año.');
+cs.forEach(([name,p])=>{if(p===20)good.push(name+': condición favorable seleccionada.');if(p===5)bad.push(name+': condición desfavorable seleccionada.');});
+if(!good.length)good.push('No se identificaron factores favorables adicionales.');if(!bad.length)bad.push('No se identificaron alertas adicionales.');
+$('results').classList.remove('hidden');$('who').textContent=($('applicant').value||'Solicitante sin código')+' · '+$('product').value;$('classification').textContent=label;$('classification').className='pill '+cl;
+$('score').textContent=score+'/100';$('ratio').textContent=ratio.toFixed(1)+'%';$('surplus').textContent=fmt(sur);$('installmentRatio').textContent=inst.toFixed(1)+'%';$('scorebar').style.width=score+'%';
+$('summary').textContent='Puntaje 5 C: '+score+'/100. La cuota equivale al '+inst.toFixed(1)+'% del ingreso. Margen después de gastos, deudas y nueva cuota: '+fmt(sur)+'.';
+$('strengths').innerHTML=good.map(x=>'<li>'+x+'</li>').join('');$('alerts').innerHTML=bad.map(x=>'<li>'+x+'</li>').join('');
+$('detail').innerHTML=cs.map(x=>'<tr><td>'+x[0]+'</td><td>'+x[1]+'</td><td>20</td></tr>').join('');
+$('recommendation').textContent=sur<0?'Revisar monto, plazo o cuota y verificar la información financiera antes de cualquier decisión.':score<45?'Ampliar la revisión documental y analizar los factores desfavorables.':score<70?'Verificar ingresos, obligaciones, referencias y garantías; analizar las alertas identificadas.':'Los indicadores seleccionados son favorables en este ejercicio. Validar documentos y políticas aplicables antes de una decisión.';
+report={Solicitante:$('applicant').value,Producto:$('product').value,Monto_Bs:$('amount').value,Plazo_meses:$('term').value,Puntaje_5C:score,Clasificacion:label,Endeudamiento:ratio.toFixed(1)+'%',Margen:fmt(sur),Cuota_sobre_ingreso:inst.toFixed(1)+'%',Factores_favorables:good.join(' | '),Alertas:bad.join(' | '),Recomendacion:$('recommendation').textContent};
+$('results').scrollIntoView({behavior:'smooth'});
+});
+$('reset').addEventListener('click',()=>{$('results').classList.add('hidden');report={};});
+$('csv').addEventListener('click',()=>{let rows=[['Campo','Resultado'],...Object.entries(report)],data='\ufeff'+rows.map(r=>r.map(x=>'"'+String(x??'').replace(/"/g,'""')+'"').join(';')).join('\n'),blob=new Blob([data],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='evaluacion_riesgo_crediticio.csv';a.click();URL.revokeObjectURL(a.href);});
+</script></body></html>
